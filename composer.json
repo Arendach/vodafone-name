@@ -2,7 +2,7 @@
     "name": "arendach/vodafone-name",
     "type": "library",
     "license": "MIT",
-    "description": "Vodafone dua integration",
+    "description": "Vodafone get name package",
     "authors": [
         {
             "name": "Arendach Taras",
