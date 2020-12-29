@@ -38,7 +38,7 @@ class CurlRequestService
 
             return $result['access_token'];
 
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
 
             return null;
 

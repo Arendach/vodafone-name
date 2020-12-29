@@ -24,7 +24,11 @@ class GetNameService
     {
         $token = resolve(CurlRequestService::class)->getToken();
 
-        $nameResponse = resolve(CurlRequestService::class)->post("/customer/api/customerManagement/v3/customer/{$msisdn}?profile=NAME", [
+        if (!$token) {
+            return null;
+        }
+
+        $nameResponse = resolve(CurlRequestService::class)->get("/customer/api/customerManagement/v3/customer/{$msisdn}?profile=NAME", [
             "Authorization: Bearer {$token}",
             'Content-Type: application/json',
             "Accept-Language: $language"
