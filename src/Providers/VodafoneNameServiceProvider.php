@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Vodafone\Name\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Config;
 use Vodafone\Name\Name;
 
 class VodafoneNameServiceProvider extends ServiceProvider
@@ -18,6 +19,12 @@ class VodafoneNameServiceProvider extends ServiceProvider
 
     public function register(): void
     {
+        Config::set('logging.channels.name', [
+            'driver' => 'daily',
+            'path'   => storage_path('logs/name.log'),
+            'level'  => 'debug',
+        ]);
+
         $this->app->singleton(Name::class, function ($app) {
             return new Name;
         });
