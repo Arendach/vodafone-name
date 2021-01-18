@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Vodafone\Name\Services;
+namespace Arendach\VodafoneName\Services;
+
+use Exception;
 
 class CurlRequestService
 {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Vodafone\Name\Providers;
+namespace Arendach\VodafoneName\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
-use Vodafone\Name\Name;
+use Arendach\VodafoneName\Name;
 
 class VodafoneNameServiceProvider extends ServiceProvider
 {

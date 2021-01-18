@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Vodafone\Name;
+namespace Arendach\VodafoneName;
 
-use Vodafone\Name\Exceptions\GetNameException;
-use Vodafone\Name\Services\GetNameService;
-use MultiSessions\Session;
+use Arendach\VodafoneName\Exceptions\GetNameException;
+use Arendach\VodafoneName\Services\GetNameService;
+use Arendach\MultiSessions\Session;
 
 class Name
 {

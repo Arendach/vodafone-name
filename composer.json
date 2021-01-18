@@ -1,22 +1,22 @@
 {
-    "name": "arendach/vodafone-name",
-    "type": "library",
-    "license": "MIT",
-    "description": "Vodafone get name package",
-    "authors": [
-        {
-            "name": "Arendach Taras",
-            "email": "arendach.taras@gmail.com"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "illuminate/support": ">=v7.0.0",
-        "php": ">=7.2"
-    },
-    "autoload": {
-        "psr-4": {
-            "Vodafone\\Name\\": "src"
-        }
+  "name": "arendach/vodafone-name",
+  "type": "library",
+  "license": "MIT",
+  "description": "Vodafone get name package",
+  "authors": [
+    {
+      "name": "Arendach Taras",
+      "email": "arendach.taras@gmail.com"
     }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "illuminate/support": ">=v7.0.0",
+    "php": ">=7.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Arendach\\VodafoneName\\": "src"
+    }
+  }
 }

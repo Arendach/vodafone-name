@@ -1,9 +1,8 @@
 <?php
 
-namespace Vodafone\Name\Services;
+namespace Arendach\VodafoneName\Services;
 
 use Faker\Factory;
-use GuzzleHttp\Client;
 use Exception;
 
 class GetNameService
