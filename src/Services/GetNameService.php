@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Arendach\VodafoneName\Services;
 
 use Faker\Factory;
@@ -7,11 +9,11 @@ use Exception;
 
 class GetNameService
 {
-    private $isTesting = false;
+    private $isTesting;
 
     public function __construct()
     {
-        $this->isDebug = config('vodafone-name.testing-mode');
+        $this->isTesting = config('vodafone-name.testing-mode');
     }
 
     public function search(string $msisdn, string $language): ?string

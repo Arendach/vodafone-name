@@ -98,4 +98,13 @@ class Name
 
         return $this->session;
     }
+
+    public function getName(string $locale = null): ?string
+    {
+        if (!$locale) {
+            $locale = currentLocale();
+        }
+
+        return $this->getSession()->get("name_{$locale}");
+    }
 }
