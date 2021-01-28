@@ -8,12 +8,12 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Arendach\VodafoneName\Name;
 
-class VodafoneNameServiceProvider extends ServiceProvider
+class NameServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
         $this->publishes([
-            __DIR__ . '/../Config/vodafone-name.php' => config_path('vodafone-name.php'),
+            __DIR__ . '/../../config/vodafone-name.php' => config_path('vodafone-name.php'),
         ], 'vodafone-name');
     }
 

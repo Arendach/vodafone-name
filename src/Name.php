@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Arendach\VodafoneName;
 
-use Arendach\VodafoneName\Exceptions\GetNameException;
 use Arendach\VodafoneName\Services\GetNameService;
 use Arendach\MultiSessions\Session;
+use Psr\SimpleCache\InvalidArgumentException;
 
 class Name
 {
@@ -18,93 +18,119 @@ class Name
     /**
      * @var Session
      */
-    private $session;
+    private $cacheStorage;
 
     /**
-     * @var array
+     * @var string|null
      */
-    private $config = [];
+    private $name;
 
     /**
-     * @var bool
+     * @var int
      */
-    private $useCache = true;
+    private $nameStatus;
 
     /**
      * Name constructor.
+     * @throws InvalidArgumentException
      */
     public function __construct()
     {
-        $this->config = config('vodafone-name');
         $this->nameService = resolve(GetNameService::class);
+
+        $this->loading();
     }
 
     /**
-     * @param bool $useCache
-     * @return $this
+     * @throws InvalidArgumentException
      */
-    public function useCache(bool $useCache = true): self
+    public function loading(): void
     {
-        $this->useCache = $useCache;
+        $locale = currentLocale();
 
-        return $this;
+        $name = $this->getCacheStorage()->get("name_{$locale}");
+        $nameStatus = $this->getCacheStorage()->get("name_status_{$locale}");
+
+        $this->name = $name;
+        $this->nameStatus = in_array($nameStatus, [1, -1]) ? $nameStatus : 0;
     }
 
     /**
      * @param string $phone
-     * @param string $language
      * @return string|null
-     * @throws GetNameException
-     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function get(string $phone, string $language = 'uk'): ?string
+    public function search(string $phone): ?string
     {
-        if (!$this->useCache) {
-            return $this->nameService->search($phone, $language);
-        }
-
-        $this->saveToCache($phone);
-
-        return $this->getSession()->get("name_{$language}");
+        return $this->nameService->search($phone);
     }
 
     /**
-     * @param string $lang
-     * @return bool
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @param string $phone
+     * @return string|null
      */
-    public function hasCachedName(string $lang): bool
+    public function searchAndSave(string $phone): ?string
     {
-        return $this->getSession()->has("name_{$lang}") && !is_null($this->getSession()->get("name_{$lang}"));
+        $name = $this->nameService->search($phone);
+
+        $this->name = $name;
+        $this->nameStatus = $name ? 1 : -1;
+
+        $this->saveToCache($name);
+
+        return $this->name;
     }
 
-    private function saveToCache(string $phone): void
+    /**
+     * @param string $name
+     * @param string|null $locale
+     */
+    private function saveToCache(string $name, string $locale = null): void
     {
-        foreach ($this->config['support-languages'] as $lang) {
-            $name = $this->nameService->search($phone, $lang);
-
-            $this->getSession()->set("name_{$lang}", $name);
+        if (is_null($locale)) {
+            $locale = currentLocale();
         }
+
+        $this->getCacheStorage()->set("name_{$locale}", $name);
+        $this->getCacheStorage()->set("name_status_{$locale}", $name ? 1 : -1);
     }
 
     /**
      * @return Session
      */
-    private function getSession(): Session
+    private function getCacheStorage(): Session
     {
-        if (!$this->session) {
-            $this->session = new Session('personification');
+        $abstract = Session::abstractKey('personification');
+
+        if (!$this->cacheStorage) {
+            $this->cacheStorage = app($abstract);
         }
 
-        return $this->session;
+        return $this->cacheStorage;
     }
 
-    public function getName(string $locale = null): ?string
+    /**
+     * @return string|null
+     */
+    public function getName(): ?string
     {
-        if (!$locale) {
-            $locale = currentLocale();
-        }
+        return $this->name;
+    }
 
-        return $this->getSession()->get("name_{$locale}");
+    /**
+     * @return int
+     */
+    public function getStatus(): int
+    {
+        return $this->nameStatus;
+    }
+
+    /**
+     * @return string
+     */
+    public static function currentLocale(): string
+    {
+        $locale = app()->getLocale();
+
+        return $locale == 'ua' ? 'uk' : $locale;
     }
 }

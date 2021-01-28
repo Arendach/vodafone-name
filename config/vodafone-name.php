@@ -27,6 +27,16 @@ return [
     'middleware-password' => env('NAME_MIDDLEWARE_PASSWORD', null),
 
     /**
+     * Middleware profile
+     */
+    'middleware-profile'  => env('NAME_MIDDLEWARE_PROFILE', 'NAME-RTM'),
+
+    /**
+     * Middleware channel
+     */
+    'middleware-channel' => env('NAME_MIDDLEWARE_CHANNEL', 'VF-WEBSITE'),
+
+    /**
      * Support language for NameService
      */
     'support_languages'   => [

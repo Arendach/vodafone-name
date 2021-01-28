@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Arendach\VodafoneName\Services;
 
-use Exception;
+use Throwable;
 
 class CurlRequestService
 {
@@ -17,7 +17,7 @@ class CurlRequestService
 
     public function post(string $uri, array $headers = [], array $data = [])
     {
-        return $this->curl($uri, $headers, $data, 'POST');
+        return $this->curl($uri, $headers, $data);
     }
 
     public function get(string $uri, array $headers = [], array $data = [])
@@ -40,7 +40,7 @@ class CurlRequestService
 
             return $result['access_token'];
 
-        } catch (\Exception $exception) {
+        } catch (Throwable $exception) {
 
             return null;
 
@@ -49,7 +49,7 @@ class CurlRequestService
 
     private function curl($uri, $headers = [], $data = [], $method = 'POST')
     {
-        $host = config('msisdn.middleware.host');
+        $host = config('vodafone-name.middleware-host');
 
         $curl = curl_init();
 
@@ -74,7 +74,7 @@ class CurlRequestService
 
             return json_decode($response, true);
 
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
 
             return [];
 
