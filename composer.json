@@ -9,9 +9,7 @@
       "email": "arendach.taras@gmail.com"
     }
   ],
-  "minimum-stability": "dev",
   "require": {
-    "illuminate/support": ">=v7.0.0",
     "php": ">=7.2"
   },
   "autoload": {
