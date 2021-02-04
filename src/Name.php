@@ -81,10 +81,10 @@ class Name
     }
 
     /**
-     * @param string $name
+     * @param string|null $name
      * @param string|null $locale
      */
-    private function saveToCache(string $name, string $locale = null): void
+    private function saveToCache(?string $name, string $locale = null): void
     {
         if (is_null($locale)) {
             $locale = currentLocale();
