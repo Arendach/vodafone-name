@@ -133,4 +133,14 @@ class Name
 
         return $locale == 'ua' ? 'uk' : $locale;
     }
+
+    public function rebootSession(): void
+    {
+        $session = $this->getCacheStorage();
+        $locale = self::currentLocale();
+
+        if ($session->get("name_status_{$locale}") == -1) {
+            $session->set("name_status_{$locale}", 0);
+        }
+    }
 }
