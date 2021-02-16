@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Arendach\VodafoneName\Providers;
 
+use Arendach\VodafoneName\Services\CurlRequest;
+use Arendach\VodafoneName\Services\GetName;
+use Arendach\VodafoneName\Services\Logger;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Arendach\VodafoneName\Name;
@@ -25,8 +28,9 @@ class NameServiceProvider extends ServiceProvider
             'level'  => 'debug',
         ]);
 
-        $this->app->singleton(Name::class, function ($app) {
-            return new Name;
-        });
+        $this->app->singleton(Name::class, Name::class);
+        $this->app->singleton(Logger::class, Logger::class);
+        $this->app->singleton(CurlRequest::class, CurlRequest::class);
+        $this->app->singleton(GetName::class, GetName::class);
     }
 }

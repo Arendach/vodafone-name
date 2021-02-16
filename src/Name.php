@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Arendach\VodafoneName;
 
-use Arendach\VodafoneName\Services\GetNameService;
+use Arendach\VodafoneName\Services\GetName;
 use Arendach\MultiSessions\Session;
 use Psr\SimpleCache\InvalidArgumentException;
 
 class Name
 {
     /**
-     * @var GetNameService
+     * @var GetName
      */
     private $nameService;
 
@@ -36,7 +36,7 @@ class Name
      */
     public function __construct()
     {
-        $this->nameService = resolve(GetNameService::class);
+        $this->nameService = resolve(GetName::class);
 
         $this->loading();
     }

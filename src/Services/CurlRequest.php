@@ -6,13 +6,13 @@ namespace Arendach\VodafoneName\Services;
 
 use Throwable;
 
-class CurlRequestService
+class CurlRequest
 {
-    private $isTesting;
+    private $logger;
 
     public function __construct()
     {
-        $this->isTesting = config('vodafone-name.testing-mode');
+        $this->logger = resolve(Logger::class);
     }
 
     public function post(string $uri, array $headers = [], array $data = [])
@@ -27,20 +27,23 @@ class CurlRequestService
 
     public function getToken(): ?string
     {
-        $login = config('vodafone-name.middleware-login');
-        $password = config('vodafone-name.middleware-password');
-
-        $auth = "Basic " . base64_encode("{$login}:{$password}");
-
-        $result = $this->curl('/uaa/oauth/token?grant_type=client_credentials', [
-            "Authorization: {$auth}"
-        ]);
-
         try {
 
-            return $result['access_token'];
+            $login = config('vodafone-name.middleware-login');
+            $password = config('vodafone-name.middleware-password');
+
+            $auth = "Basic " . base64_encode("{$login}:{$password}");
+
+            $result = $this->curl('/uaa/oauth/token?grant_type=client_credentials', [
+                "Authorization: {$auth}"
+            ]);
+
+
+            return $result['access_token'] ?? null;
 
         } catch (Throwable $exception) {
+
+            $this->logger->save($exception);
 
             return null;
 
