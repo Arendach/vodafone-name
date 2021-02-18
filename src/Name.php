@@ -37,6 +37,7 @@ class Name
     public function __construct()
     {
         $this->nameService = resolve(GetName::class);
+        $this->cacheStorage = Session::instance('personification');
 
         $this->loading();
     }
@@ -48,8 +49,8 @@ class Name
     {
         $locale = currentLocale();
 
-        $name = $this->getCacheStorage()->get("name_{$locale}");
-        $nameStatus = $this->getCacheStorage()->get("name_status_{$locale}");
+        $name = $this->cacheStorage->get("name_{$locale}");
+        $nameStatus = $this->cacheStorage->get("name_status_{$locale}");
 
         $this->name = $name;
         $this->nameStatus = in_array($nameStatus, [1, -1]) ? $nameStatus : 0;
@@ -65,12 +66,12 @@ class Name
     }
 
     /**
-     * @param string $phone
+     * @param string|null $phone
      * @return string|null
      */
-    public function searchAndSave(string $phone): ?string
+    public function searchAndSave(?string $phone): ?string
     {
-        $name = $this->nameService->search($phone);
+        $name = !$phone ? null : $this->nameService->search($phone);
 
         $this->name = $name;
         $this->nameStatus = $name ? 1 : -1;
@@ -90,22 +91,8 @@ class Name
             $locale = currentLocale();
         }
 
-        $this->getCacheStorage()->set("name_{$locale}", $name);
-        $this->getCacheStorage()->set("name_status_{$locale}", $name ? 1 : -1);
-    }
-
-    /**
-     * @return Session
-     */
-    private function getCacheStorage(): Session
-    {
-        $abstract = Session::abstractKey('personification');
-
-        if (!$this->cacheStorage) {
-            $this->cacheStorage = app($abstract);
-        }
-
-        return $this->cacheStorage;
+        $this->cacheStorage->set("name_{$locale}", $name);
+        $this->cacheStorage->set("name_status_{$locale}", $name ? 1 : -1);
     }
 
     /**
@@ -136,11 +123,10 @@ class Name
 
     public function rebootSession(): void
     {
-        $session = $this->getCacheStorage();
         $locale = self::currentLocale();
 
-        if ($session->get("name_status_{$locale}") == -1) {
-            $session->set("name_status_{$locale}", 0);
+        if ($this->cacheStorage->get("name_status_{$locale}") == -1) {
+            $this->cacheStorage->set("name_status_{$locale}", 0);
         }
     }
 }
