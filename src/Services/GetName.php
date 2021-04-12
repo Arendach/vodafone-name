@@ -28,7 +28,13 @@ class GetName
     {
         try {
 
+            $supportLocales = config('vodafone-name.support_languages');
             $locale = Name::currentLocale();
+
+            if (!in_array($locale, $supportLocales)) {
+                return null;
+            }
+
             $token = resolve(CurlRequest::class)->getToken();
             $profile = config('vodafone-name.middleware-profile');
             $channel = config('vodafone-name.middleware-channel');
