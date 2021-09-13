@@ -116,7 +116,9 @@ class Name
      */
     public static function currentLocale(): string
     {
-        $locale = app()->getLocale();
+        $locale = request()->hasHeader('Content-Language')
+            ? request()->header('Content-Language')
+            : app()->getLocale();
 
         return $locale == 'ua' ? 'uk' : $locale;
     }
